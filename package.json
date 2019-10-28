@@ -1,7 +1,7 @@
 {
-  "name": "Bearcon",
+  "name": "DeviceManager",
   "version": "1.0.0",
-  "description": "Social Network",
+  "description": "Device Manager",
   "main": "server.js",
   "scripts": {
     "start": "node server",

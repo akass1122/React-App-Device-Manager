@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React from 'react';
 import MainPage from './components/MainPage';
 import './App.css';
 const App = () => {

@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React from "react";
 import SmallPage from "./SmallPage";
 import bytesToStr from "../helper";
 
