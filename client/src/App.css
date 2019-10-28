@@ -599,13 +599,6 @@ button {
     margin-right: 0.6rem;
 }
 
-/* Landing Page */
-.landing {
-    position: relative;
-    background: url('./img/cal1.jpg') no-repeat center center/cover;
-    height: 100vh;
-}
-
 .landing-inner {
     color: #fff;
     height: 100%;
