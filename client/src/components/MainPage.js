@@ -1,7 +1,6 @@
 import React from "react";
 import SmallPage from "./SmallPage";
 import bytesToStr from "../helper";
-
 import axios from "axios";
 
 class MainPage extends React.Component {
@@ -11,11 +10,9 @@ class MainPage extends React.Component {
       devices: [],
       index: 0
     }
-
   }
   onChangeName = (event, id) => {
     const deviceIndex = this.state.devices.findIndex(device => { return device._id === id });
-
     const chosenDeviceCopy = { ...this.state.devices[deviceIndex] }
     chosenDeviceCopy.owner = event.target.value;
     const devicesCopy = [...this.state.devices];
@@ -51,19 +48,16 @@ class MainPage extends React.Component {
         if (res.data.length > 0) {
           this._id = res.data[0]._id;
         }
-
-        console.log(this.state.devices);
       } catch (err) {
         console.log("Error getting data");
       }
     };
     getDevices();
   }
-
   render() {
-
     return (
       <div>
+        <p className="title"> All Devices </p>
         <form onSubmit={this.onSubmitName}>
           <table className="table table-bordered table-condensed table-striped table-hover">
             <thead>
@@ -87,19 +81,24 @@ class MainPage extends React.Component {
                   <td>{bytesToStr(device.networkRxBytes)}</td>
                 </tr>
               ))}
-
             </tbody>
           </table>
-          <input type="submit" value="Submit last changed person" className='btn btn-dark' />
+          <p className="top1rem" />
+          <input type="submit" value="Submit Last Change to Server" className='btn' />
         </form>
         <br />
         <br />
 
-        <SmallPage devices={this.state.devices} columnName="CPU" />
-        <SmallPage devices={this.state.devices} columnName="Mem" />
-        <SmallPage devices={this.state.devices} columnName="TX" />
-        <SmallPage devices={this.state.devices} columnName="RX" />
-
+        <div className="panel-grid">
+          <div className="panel-cpu">
+            <SmallPage className="panel-grid" devices={this.state.devices} columnName="CPU" />
+          </div>
+          <div className="panel-mem">
+            <SmallPage devices={this.state.devices} columnName="Mem" />
+            <SmallPage devices={this.state.devices} columnName="TX" />
+            <SmallPage devices={this.state.devices} columnName="RX" />
+          </div>
+        </div>
       </div>
     )
   }
