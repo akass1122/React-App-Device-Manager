@@ -54,7 +54,7 @@ div {
     margin-left: auto;
     margin-right: auto;
     border-radius: 7.5px;
-    border: 1px solid white;
+    border: 2px solid white;
 }
 
 .table th,
@@ -63,8 +63,9 @@ div {
     text-align: left;
 }
 .table tr:nth-child(even) {
-    background-color: #fff;
+    background-color: #f2f2f2;
 }
+
 
 .table th {
     background: #fff;
