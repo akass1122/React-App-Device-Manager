@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://andrew:12345@socialnet-dzhvz.mongodb.net/test?retryWrites=true&w=majority"
+  //"mongoURI": "mongodb+srv://andrew:12345@socialnet-dzhvz.mongodb.net/test?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://a:a@cluster0-jkkkr.mongodb.net/test?retryWrites=true&w=majority"
 }

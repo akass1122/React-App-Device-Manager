@@ -32,7 +32,7 @@ class MainPage extends React.Component {
         };
         const res = await axios.post('/api/devices', changedDevice, config);
         //console.log('status: ', res.status);
-        //console.log(res.data);
+        console.log(res.data);
       } catch (err) {
         console.log("Error posting data");
       }
@@ -46,9 +46,8 @@ class MainPage extends React.Component {
 
         const res = await axios.get('/api/devices');
         this.setState({ devices: res.data });
-        if (res.data.length > 0) {
-          this._id = res.data[0]._id;
-        }
+        console.log(res.data);
+
       } catch (err) {
         console.log("Error getting data");
       }
