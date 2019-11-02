@@ -11,14 +11,15 @@ class MainPage extends React.Component {
       index: 0
     }
   }
-  onChangeName = (event, id) => {
-    const deviceIndex = this.state.devices.findIndex(device => { return device._id === id });
-    const chosenDeviceCopy = { ...this.state.devices[deviceIndex] }
+
+  onChangeName = (event, i) => {
+    const chosenDeviceCopy = { ...this.state.devices[i] }
     chosenDeviceCopy.owner = event.target.value;
     const devicesCopy = [...this.state.devices];
-    devicesCopy[deviceIndex] = chosenDeviceCopy; // a copy of array of devices with changed name
-    this.setState({ devices: devicesCopy, index: deviceIndex });
+    devicesCopy[i] = chosenDeviceCopy; // a copy of array of devices with changed name
+    this.setState({ devices: devicesCopy, index: i });
   }
+
   onSubmitName = e => {
     e.preventDefault();
     const postDevices = async () => {
@@ -30,8 +31,8 @@ class MainPage extends React.Component {
           }
         };
         const res = await axios.post('/api/devices', changedDevice, config);
-        console.log('status: ', res.status);
-        console.log(res.data);
+        //console.log('status: ', res.status);
+        //console.log(res.data);
       } catch (err) {
         console.log("Error posting data");
       }
@@ -74,7 +75,7 @@ class MainPage extends React.Component {
               {this.state.devices.map((device, i) => (
                 <tr key={i}>
                   <td>{device.ip}</td>
-                  <td><input type="text" name="ownwer" defaultValue={device.owner} onChange={(event) => this.onChangeName(event, device._id)} /></td>
+                  <td><input type="text" name="ownwer" defaultValue={device.owner} onChange={(event) => this.onChangeName(event, i)} /></td>
                   <td>{device.cpuPct}%</td>
                   <td>{bytesToStr(device.memBytes)}</td>
                   <td>{bytesToStr(device.networkTxBytes)}</td>
