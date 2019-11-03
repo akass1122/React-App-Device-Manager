@@ -65,7 +65,14 @@ class MainPage extends React.Component {
   onSubmitRow = (event, i) => {
     event.preventDefault();
     const changedDevice = this.state.devices[i]
-    this.postDevice(changedDevice);
+    const deviceToDB = {
+      ...changedDevice,
+      memBytes: changedDevice.memBytes * 1024 * 1024 * 1024,
+      networkTxBytes: changedDevice.networkTxBytes * 1024 * 1024,
+      networkRxBytes: changedDevice.networkRxBytes * 1024 * 1024
+    }
+    this.postDevice(deviceToDB);
+    console.log("SubmitRow: ", deviceToDB);
   }
 
   onSubmitNewDevice = (event) => {
@@ -167,9 +174,19 @@ class MainPage extends React.Component {
 
                 </td>
                 {/* <td>{device.memBytes} GB</td> */}
-                <td>{device.networkTxBytes} MB</td>
-                <td>{device.networkRxBytes} MB</td>
-                <td><form><input type="submit" value="Submit Row" className='btn' /> </form></td>
+                <td>
+
+                  <input type="number" name="networkTxBytes" defaultValue={device.networkTxBytes} onChange={(event) => this.onChangeRow(event, i)} />
+
+                </td>
+                <td>
+
+                  <input type="number" name="networkRxBytes" defaultValue={device.networkRxBytes} onChange={(event) => this.onChangeRow(event, i)} />
+
+                </td>
+                {/* <td>{device.networkTxBytes} MB</td>
+                <td>{device.networkRxBytes} MB</td> */}
+                <td><form onSubmit={(event) => this.onSubmitRow(event, i)}><input type="submit" value="Submit Row" className='btn' /> </form></td>
 
 
               </tr>
@@ -178,9 +195,13 @@ class MainPage extends React.Component {
           </tbody>
         </table>
         <p className="top1rem" />
-        <form onSubmit={this.onSubmitName}>
+
+        {/* <form onSubmit={this.onSubmitName}>
           <input type="submit" value="Submit Last Change to Server" className='btn' />
-        </form>
+        
+        </form> */}
+        <p className="title"> Add Row </p>
+
         <form onSubmit={this.onSubmitNewDevice}>
           <table className="table table-bordered table-condensed table-striped table-hover">
             <thead>

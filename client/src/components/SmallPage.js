@@ -62,9 +62,9 @@ const SmallPage = ({
                 <td>{device.ip}</td>
                 <td>{device.owner}</td>
                 {columnName === "CPU" && (<td>{device.cpuPct}%</td>)}
-                {columnName === "Mem" && (< td > {bytesToStr(device.memBytes)}</td>)}
-                {columnName === "TX" && (<td>{bytesToStr(device.networkTxBytes)}</td>)}
-                {columnName === "RX" && (<td>{bytesToStr(device.networkRxBytes)}</td>)}
+                {columnName === "Mem" && (< td > {device.memBytes}</td>)}
+                {columnName === "TX" && (<td>{device.networkTxBytes}</td>)}
+                {columnName === "RX" && (<td>{device.networkRxBytes}</td>)}
               </tr>
             ))}
           </tbody>

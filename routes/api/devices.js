@@ -19,33 +19,38 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
+    //console.log("req.body:", req.body);
+    const {
+      ip,
+      owner,
+      cpuPct,
+      memBytes,
+      networkRxBytes,
+      networkTxBytes
+    } = req.body;
+    //Build device object
+    const deviceFields = {};
+    if (ip) deviceFields.ip = ip;
+    if (owner) deviceFields.owner = owner;
+    if (cpuPct) deviceFields.cpuPct = cpuPct;
+    if (memBytes) deviceFields.memBytes = memBytes;
+    if (networkRxBytes) deviceFields.networkRxBytes = networkRxBytes;
+    if (networkTxBytes) deviceFields.networkTxBytes = networkTxBytes;
+
     let device = await Device.findOne({ _id: req.body._id });
     if (device) {
       //Update
       device = await Device.findOneAndUpdate(
         { _id: req.body._id },
-        { $set: { owner: req.body.owner } },
+        { $set: deviceFields },
         { new: true }
       );
+      //console.log("route: ", device);
       return res.json(device);
+
     } else {
       //Create
-      const {
-        ip,
-        owner,
-        cpuPct,
-        memBytes,
-        networkRxBytes,
-        networkTxBytes
-      } = req.body;
-      //Build profile object
-      const deviceFields = {};
-      if (ip) deviceFields.ip = ip;
-      if (owner) deviceFields.owner = owner;
-      if (cpuPct) deviceFields.cpuPct = cpuPct;
-      if (memBytes) deviceFields.memBytes = memBytes;
-      if (networkRxBytes) deviceFields.networkRxBytes = networkRxBytes;
-      if (networkTxBytes) deviceFields.networkTxBytes = networkTxBytes;
+
       device = new Device(deviceFields);
       await device.save();
     }

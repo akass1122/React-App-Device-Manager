@@ -4,8 +4,8 @@ import './App.css';
 const App = () => {
   return (
     <Fragment>
-      <MainPage msg="Hello" />
-      <MainPage msg="Bye" />
+      <MainPage />
+
     </Fragment>
   );
 };
