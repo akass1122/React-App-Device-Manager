@@ -1,6 +1,5 @@
 import React from "react";
 import SmallPage from "./SmallPage";
-import bytesToStr from "../helper";
 import axios from "axios";
 
 class MainPage extends React.Component {
@@ -8,10 +7,10 @@ class MainPage extends React.Component {
     super(props);
     this.state = {
       devices: [],
-      index: 0,
       newDevice: {
         ip: "",
         owner: "",
+        cpuPct: 0,
         memBytes: 0,
         networkTxBytes: 0,
         networkRxBytes: 0
@@ -27,21 +26,21 @@ class MainPage extends React.Component {
       };
       const res = await axios.post('/api/devices', device, config);
       //console.log('status: ', res.status);
-      console.log(res.data);
+      //console.log(res.data);
     } catch (err) {
       console.log("Error posting data");
     }
 
   }
-
+  // used as a helper function for onChange
   onChangeRow = (event, i) => {
     const chosenDeviceCopy = {
       ...this.state.devices[i],
       [event.target.name]: event.target.value
     }
     const devicesCopy = [...this.state.devices];
-    devicesCopy[i] = chosenDeviceCopy; // a copy of array of devices with changed name
-    this.setState({ ...this.state, devices: devicesCopy, index: i });
+    devicesCopy[i] = chosenDeviceCopy;// changed i-th device in array copy
+    this.setState({ ...this.state, devices: devicesCopy });
   }
 
   onChangeAdd = (event) => {
@@ -56,12 +55,6 @@ class MainPage extends React.Component {
     this.setState(updatedState);
   }
 
-  onSubmitName = e => {
-    e.preventDefault();
-    const changedDevice = this.state.devices[this.state.index]
-    this.postDevice(changedDevice);
-  }
-
   onSubmitRow = (event, i) => {
     event.preventDefault();
     const changedDevice = this.state.devices[i]
@@ -72,7 +65,7 @@ class MainPage extends React.Component {
       networkRxBytes: changedDevice.networkRxBytes * 1024 * 1024
     }
     this.postDevice(deviceToDB);
-    console.log("SubmitRow: ", deviceToDB);
+    //console.log("SubmitRow: ", deviceToDB);
   }
 
   onSubmitNewDevice = (event) => {
@@ -85,16 +78,17 @@ class MainPage extends React.Component {
     }
 
     const devicesCopy = this.state.devices.map(device => ({ ...device }));
-    devicesCopy.push(deviceToAdd);
+    devicesCopy.push(this.state.newDevice);
     this.setState({ ...this.state, devices: devicesCopy });
     this.postDevice(deviceToAdd);
     console.log("deviceToAdd: ", deviceToAdd);
   }
 
-  getDevices = async () => {
+  getDevices = async () => { //use if show in bytes
     try {
 
       const res = await axios.get('/api/devices');
+      // res.data contains array of all devices
       this.setState({ devices: res.data });
       console.log(res.data);
 
@@ -102,11 +96,13 @@ class MainPage extends React.Component {
       console.log("Error getting data");
     }
   };
-  getAndConvertDevices =
+  getAndConvertDevices = // use if show in GB, MB
     async () => {
       try {
 
         const res = await axios.get('/api/devices');
+        // res.data contains array of all devices
+        //take from res.data and convert to GB, MB
         const convertedDevices = res.data.map(device => ({
           ...device,
           memBytes: device.memBytes / (1024.0 * 1024 * 1024).toFixed(2),
@@ -115,8 +111,7 @@ class MainPage extends React.Component {
         }));
 
         this.setState({ devices: convertedDevices });
-        console.log(res.data);
-
+        //console.log(res.data);
       } catch (err) {
         console.log("Error getting data");
       }
@@ -137,87 +132,56 @@ class MainPage extends React.Component {
             <tr>
               <th className="col-md-2">IP</th>
               <th className="col-md-2">Owner</th>
-              <th className="col-md-2">CPU</th>
-              <th className="col-md-2">Mem</th>
-              <th className="col-md-2">TX</th>
-              <th className="col-md-2">RX</th>
+              <th className="col-md-2">CPU in Percent</th>
+              <th className="col-md-2">Mem in GB</th>
+              <th className="col-md-2">TX in MB</th>
+              <th className="col-md-2">RX in MB</th>
               <th className="col-md-2"></th>
 
             </tr>
           </thead>
           <tbody>
             {this.state.devices.map((device, i) => (
-
               <tr key={i} >
-
-                {/* <td>{device.ip}</td> */}
-
                 <td>
-
                   <input type="text" name="ip" defaultValue={device.ip} size="20" onChange={(event) => this.onChangeRow(event, i)} />
-
                 </td>
                 <td>
-
                   <input type="text" name="owner" defaultValue={device.owner} onChange={(event) => this.onChangeRow(event, i)} />
-
                 </td>
                 <td>
-
                   <input type="number" name="cpuPct" defaultValue={device.cpuPct} size="3" onChange={(event) => this.onChangeRow(event, i)} />
-
                 </td>
-                {/* <td>{device.cpuPct}%</td> */}
                 <td>
-
                   <input type="number" name="memBytes" defaultValue={device.memBytes} onChange={(event) => this.onChangeRow(event, i)} />
-
                 </td>
-                {/* <td>{device.memBytes} GB</td> */}
                 <td>
-
                   <input type="number" name="networkTxBytes" defaultValue={device.networkTxBytes} onChange={(event) => this.onChangeRow(event, i)} />
-
                 </td>
                 <td>
-
                   <input type="number" name="networkRxBytes" defaultValue={device.networkRxBytes} onChange={(event) => this.onChangeRow(event, i)} />
-
                 </td>
-                {/* <td>{device.networkTxBytes} MB</td>
-                <td>{device.networkRxBytes} MB</td> */}
                 <td><form onSubmit={(event) => this.onSubmitRow(event, i)}><input type="submit" value="Submit Row" className='btn' /> </form></td>
-
-
               </tr>
-
             ))}
           </tbody>
         </table>
         <p className="top1rem" />
-
-        {/* <form onSubmit={this.onSubmitName}>
-          <input type="submit" value="Submit Last Change to Server" className='btn' />
-        
-        </form> */}
         <p className="title"> Add Row </p>
-
         <form onSubmit={this.onSubmitNewDevice}>
           <table className="table table-bordered table-condensed table-striped table-hover">
             <thead>
               <tr>
                 <th className="col-md-2">IP</th>
                 <th className="col-md-2">Owner</th>
-                <th className="col-md-2">CPU</th>
-                <th className="col-md-2">Mem</th>
-                <th className="col-md-2">TX</th>
-                <th className="col-md-2">RX</th>
+                <th className="col-md-2">CPU in Percent</th>
+                <th className="col-md-2">Mem in GB</th>
+                <th className="col-md-2">TX in MB</th>
+                <th className="col-md-2">RX in MB</th>
               </tr>
             </thead>
             <tbody>
-
               <tr>
-
                 <td><input type="text" name="ip" defaultValue={this.state.newDevice.ip} onChange={this.onChangeAdd} /></td>
                 <td><input type="text" name="owner" defaultValue={this.state.newDevice.owner} onChange={this.onChangeAdd} /></td>
                 <td><input type="number" name="cpuPct" defaultValue={this.state.newDevice.cpuPct} onChange={this.onChangeAdd} /></td>
@@ -230,12 +194,6 @@ class MainPage extends React.Component {
           </table>
           <input type="submit" value="Submit Added Row to Server" className='btn' />
         </form>
-
-
-
-
-
-
         <br />
         <br />
 

@@ -1,34 +1,33 @@
 import React, { Fragment } from "react";
-import bytesToStr from "../helper";
 const SmallPage = ({
   devices,
   columnName
 }) => {
-  const clonedDevices = devices.map(a => ({ ...a }));
+  const clonedDevices = devices.map(device => ({ ...device }));
   let topDevices;
-  let propertyName;
+  //let propertyName;
   const sortColumn = (devices, columnName, rowNum) => {
     switch (columnName) {
       case "CPU":
-        propertyName = "cpuPct";
+        //propertyName = "cpuPct";
         devices.sort(function (a, b) {
           return b.cpuPct - a.cpuPct;
         });
         break;
       case "Mem":
-        propertyName = "memBytes";
+        //propertyName = "memBytes";
         devices.sort(function (a, b) {
           return b.memBytes - a.memBytes;
         });
         break;
       case "TX":
-        propertyName = "networkTxBytes";
+        //propertyName = "networkTxBytes";
         devices.sort(function (a, b) {
           return b.networkTxBytes - a.networkTxBytes;
         });
         break;
       case "RX":
-        propertyName = "networkRxBytes";
+        //propertyName = "networkRxBytes";
         devices.sort(function (a, b) {
           return b.networkRxBytes - a.networkRxBytes;
         });
@@ -40,7 +39,7 @@ const SmallPage = ({
   }
   let size = Math.min(devices.length, 5);
   topDevices = sortColumn(clonedDevices, columnName, size);
-  let topDevices1 = topDevices.map(device => ({ ip: device.ip, owner: device.owner, [propertyName]: device[propertyName] }));
+  //let topDevices1 = topDevices.map(device => ({ ip: device.ip, owner: device.owner, [propertyName]: device[propertyName] }));
   return (
     <Fragment>
       <div>
@@ -57,14 +56,14 @@ const SmallPage = ({
             </tr>
           </thead>
           <tbody>
-            {topDevices1.map((device, i) => (
+            {topDevices.map((device, i) => (
               <tr key={i}>
                 <td>{device.ip}</td>
                 <td>{device.owner}</td>
                 {columnName === "CPU" && (<td>{device.cpuPct}%</td>)}
-                {columnName === "Mem" && (< td > {device.memBytes}</td>)}
-                {columnName === "TX" && (<td>{device.networkTxBytes}</td>)}
-                {columnName === "RX" && (<td>{device.networkRxBytes}</td>)}
+                {columnName === "Mem" && (< td > {device.memBytes} GB</td>)}
+                {columnName === "TX" && (<td>{device.networkTxBytes} MB</td>)}
+                {columnName === "RX" && (<td>{device.networkRxBytes} MB</td>)}
               </tr>
             ))}
           </tbody>
