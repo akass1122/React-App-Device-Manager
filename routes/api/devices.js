@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
       return res.json(device);
 
     } else {
-      //Create
+      //Create new device in DB:
 
       device = new Device(deviceFields);
       await device.save();
@@ -60,4 +60,20 @@ router.post('/', async (req, res) => {
   }
 }
 );
+// Use POST request for delete because with POST request
+// we can send data to Server, we delete request Server 
+// will not accept request body  req.body
+router.post('/delete', async (req, res) => {
+  try {
+    console.log("delete ID:", req.body._id);
+    console.log("req.body: ", req.body);
+    //Remove device in DB
+    await Device.findOneAndRemove({ _id: req.body._id });
+    console.log("deleted");
+    res.json({ msg: 'Device deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 module.exports = router;

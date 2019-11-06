@@ -17,6 +17,9 @@ class MainPage extends React.Component {
       }
     }
   }
+
+  // This function postDevice make POST request to server 
+  // to route  '/api/devices'     to update or add device
   postDevice = async (device) => {
     try {
       const config = {
@@ -25,14 +28,31 @@ class MainPage extends React.Component {
         }
       };
       const res = await axios.post('/api/devices', device, config);
-      //console.log('status: ', res.status);
       //console.log(res.data);
     } catch (err) {
       console.log("Error posting data");
     }
+  }
+  // Function deleteDevice send POST request to
+  // Server at route   '/api/devices/delete'
+  // We call axios POST because we need to send _id to server
+  // If we use axios DELETE method then we cannot send data to server
+  deleteDevice = async (idOfDeviceToDelete) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      await axios.post('/api/devices/delete', { _id: idOfDeviceToDelete }, config);
+      console.log("idOfDeviceToDelete: ", idOfDeviceToDelete);
+    } catch (err) {
+      console.log("Error deleting");
+    }
 
   }
-  // used as a helper function for onChange
+
+  // used as a helper function for onChange in Main Table
   onChangeRow = (event, i) => {
     const chosenDeviceCopy = {
       ...this.state.devices[i],
@@ -42,7 +62,7 @@ class MainPage extends React.Component {
     devicesCopy[i] = chosenDeviceCopy;// changed i-th device in array copy
     this.setState({ ...this.state, devices: devicesCopy });
   }
-
+  // onChange function in Add Table
   onChangeAdd = (event) => {
     const updatedDevice = {
       ...this.state.newDevice,
@@ -55,54 +75,72 @@ class MainPage extends React.Component {
     this.setState(updatedState);
   }
 
+  // Helper function for onSubmit to submit a row in Main Table
   onSubmitRow = (event, i) => {
     event.preventDefault();
     const changedDevice = this.state.devices[i]
-    const deviceToDB = {
+    const deviceToDB = { // copy change changedDevice and convert to Bytes
       ...changedDevice,
       memBytes: changedDevice.memBytes * 1024 * 1024 * 1024,
       networkTxBytes: changedDevice.networkTxBytes * 1024 * 1024,
       networkRxBytes: changedDevice.networkRxBytes * 1024 * 1024
     }
-    this.postDevice(deviceToDB);
+    this.postDevice(deviceToDB);  // Sends POST request to Server
     //console.log("SubmitRow: ", deviceToDB);
+  }
+
+  // used as a helper function for onSubmit Delete Row in Main Table
+  onSubmitDeleteRow = (event, i) => {
+    event.preventDefault();
+    const deviceToDelete = this.state.devices[i]
+    this.deleteDevice(deviceToDelete._id);// call function deleteDevice with this device's id
+    let devicesCopy = this.state.devices.map(device => ({ ...device }));//deep copy of devices
+    devicesCopy.splice(i, 1); // delete i-th device
+    this.setState({ ...this.state, devices: devicesCopy });//update devices in state
   }
 
   onSubmitNewDevice = (event) => {
     event.preventDefault();
-    const deviceToAdd = {
+    const deviceToAdd = { //copy devices in state and convert to Bytes
       ...this.state.newDevice,
       memBytes: this.state.newDevice.memBytes * 1024 * 1024 * 1024,
       networkTxBytes: this.state.newDevice.networkTxBytes * 1024 * 1024,
       networkRxBytes: this.state.newDevice.networkRxBytes * 1024 * 1024
     }
 
-    const devicesCopy = this.state.devices.map(device => ({ ...device }));
-    devicesCopy.push(this.state.newDevice);
-    this.setState({ ...this.state, devices: devicesCopy });
-    this.postDevice(deviceToAdd);
-    console.log("deviceToAdd: ", deviceToAdd);
+    const devicesCopy = this.state.devices.map(device => ({ ...device }));//deep copy
+    devicesCopy.push(this.state.newDevice);// add newDevice to copy of devices
+    this.setState({ ...this.state, devices: devicesCopy });//update devices in state
+    this.postDevice(deviceToAdd); // Sends  POST request to Server
+    //console.log("deviceToAdd: ", deviceToAdd);
   }
-
+  // This function makes GET request to server to 
+  // route '/api/devices'  to get all devices
   getDevices = async () => { //use if show in bytes
     try {
 
       const res = await axios.get('/api/devices');
       // res.data contains array of all devices
-      this.setState({ devices: res.data });
-      console.log(res.data);
+      this.setState({ devices: res.data }); // 
+      //console.log(res.data);
 
     } catch (err) {
       console.log("Error getting data");
     }
   };
+
+
+  // This function makes GET request to server to 
+  // route '/api/devices'  to get all devices,
+  // then convert them to GB, MB before saving in state
+
   getAndConvertDevices = // use if show in GB, MB
     async () => {
       try {
 
         const res = await axios.get('/api/devices');
         // res.data contains array of all devices
-        //take from res.data and convert to GB, MB
+        //Take from res.data and convert to GB, MB
         const convertedDevices = res.data.map(device => ({
           ...device,
           memBytes: device.memBytes / (1024.0 * 1024 * 1024).toFixed(2),
@@ -110,16 +148,21 @@ class MainPage extends React.Component {
           networkRxBytes: device.networkRxBytes / (1024.0 * 1024).toFixed(2)
         }));
 
-        this.setState({ devices: convertedDevices });
+        this.setState({ devices: convertedDevices });//set state with these devices
         //console.log(res.data);
       } catch (err) {
         console.log("Error getting data");
       }
     };
 
+  // This function is called before page rendering.
+  // It calls getAndConvertDevices which sends 
+  // GET request to server to 
+  // route   '/api/devices'  to get all devices,
+  // then convert them to GB, MB before saving in state
   componentWillMount() {
-    //this.getDevices();
-    this.getAndConvertDevices();
+    //this.getDevices();   // use this line if no need to convert to GB, MB
+    this.getAndConvertDevices(); // Sends GET request to Server, then convert to GB, MB
   }
   render() {
     return (
@@ -162,6 +205,7 @@ class MainPage extends React.Component {
                   <input type="number" name="networkRxBytes" defaultValue={device.networkRxBytes} onChange={(event) => this.onChangeRow(event, i)} />
                 </td>
                 <td><form onSubmit={(event) => this.onSubmitRow(event, i)}><input type="submit" value="Submit Row" className='btn' /> </form></td>
+                <td><form onSubmit={(event) => this.onSubmitDeleteRow(event, i)}><input type="submit" value="Delete Row" className='btn' /> </form></td>
               </tr>
             ))}
           </tbody>

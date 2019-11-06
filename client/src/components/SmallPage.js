@@ -5,7 +5,7 @@ const SmallPage = ({
 }) => {
   const clonedDevices = devices.map(device => ({ ...device }));
   let topDevices;
-  //let propertyName;
+  // Sort a chosen column using a comparator
   const sortColumn = (devices, columnName, rowNum) => {
     switch (columnName) {
       case "CPU":
@@ -49,6 +49,7 @@ const SmallPage = ({
             <tr>
               <th className="col-md-2">IP</th>
               <th className="col-md-2">Owner</th>
+              {/* Conditional rendering column */}
               {columnName === "CPU" && (<th className="col-md-2">CPU</th>)}
               {columnName === "Mem" && (<th className="col-md-2">Mem</th>)}
               {columnName === "TX" && (<th className="col-md-2">TX</th>)}
@@ -60,6 +61,7 @@ const SmallPage = ({
               <tr key={i}>
                 <td>{device.ip}</td>
                 <td>{device.owner}</td>
+                {/* Conditional rendering column */}
                 {columnName === "CPU" && (<td>{device.cpuPct}%</td>)}
                 {columnName === "Mem" && (< td > {device.memBytes} GB</td>)}
                 {columnName === "TX" && (<td>{device.networkTxBytes} MB</td>)}
