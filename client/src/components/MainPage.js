@@ -16,7 +16,7 @@ class MainPage extends React.Component {
         networkRxBytes: 0
       }
     }
-    this.onChangeAdd = this.onChangeAdd.bind(this);
+    this.onChangeNewDevice = this.onChangeNewDevice.bind(this);
     this.onSubmitNewDevice = this.onSubmitNewDevice.bind(this);
 
     this.onSubmitDeleteRow = this.onSubmitDeleteRow.bind(this);
@@ -69,7 +69,7 @@ class MainPage extends React.Component {
     this.setState({ ...this.state, devices: devicesCopy });
   }
   // onChange function in Add Table
-  onChangeAdd = (event) => {
+  onChangeNewDevice = (event) => {
     const updatedDevice = {
       ...this.state.newDevice,
       [event.target.name]: event.target.value
@@ -245,12 +245,12 @@ class MainPage extends React.Component {
             </thead>
             <tbody>
               <tr>
-                <td><input type="text" name="ip" value={this.state.newDevice.ip} onChange={this.onChangeAdd} /></td>
-                <td><input type="text" name="owner" value={this.state.newDevice.owner} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="cpuPct" value={this.state.newDevice.cpuPct} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="memBytes" value={this.state.newDevice.memBytes} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="networkTxBytes" value={this.state.newDevice.networkTxBytes} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="networkRxBytes" value={this.state.newDevice.networkRxBytes} onChange={this.onChangeAdd} /></td>
+                <td><input type="text" name="ip" value={this.state.newDevice.ip} onChange={this.onChangeNewDevice} /></td>
+                <td><input type="text" name="owner" value={this.state.newDevice.owner} onChange={this.onChangeNewDevice} /></td>
+                <td><input type="number" name="cpuPct" value={this.state.newDevice.cpuPct} onChange={this.onChangeNewDevice} /></td>
+                <td><input type="number" name="memBytes" value={this.state.newDevice.memBytes} onChange={this.onChangeNewDevice} /></td>
+                <td><input type="number" name="networkTxBytes" value={this.state.newDevice.networkTxBytes} onChange={this.onChangeNewDevice} /></td>
+                <td><input type="number" name="networkRxBytes" value={this.state.newDevice.networkRxBytes} onChange={this.onChangeNewDevice} /></td>
               </tr>
 
             </tbody>
