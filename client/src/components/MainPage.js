@@ -18,6 +18,10 @@ class MainPage extends React.Component {
     }
     this.onChangeAdd = this.onChangeAdd.bind(this);
     this.onSubmitNewDevice = this.onSubmitNewDevice.bind(this);
+
+    this.onSubmitDeleteRow = this.onSubmitDeleteRow.bind(this);
+    this.onChangeRow = this.onChangeRow.bind(this);
+    this.onSubmitRow = this.onSubmitRow.bind(this);
   }
 
   // This function postDevice make POST request to server 
@@ -202,22 +206,22 @@ class MainPage extends React.Component {
             {this.state.devices.map((device, i) => (
               <tr key={i} >
                 <td>
-                  <input type="text" name="ip" defaultValue={device.ip} size="20" onChange={(event) => this.onChangeRow(event, i)} />
+                  <input type="text" name="ip" value={device.ip} size="20" onChange={(event) => this.onChangeRow(event, i)} />
                 </td>
                 <td>
-                  <input type="text" name="owner" defaultValue={device.owner} onChange={(event) => this.onChangeRow(event, i)} />
+                  <input type="text" name="owner" value={device.owner} onChange={(event) => this.onChangeRow(event, i)} />
                 </td>
                 <td>
-                  <input type="number" name="cpuPct" defaultValue={device.cpuPct} size="3" onChange={(event) => this.onChangeRow(event, i)} />
+                  <input type="number" name="cpuPct" value={device.cpuPct} size="3" onChange={(event) => this.onChangeRow(event, i)} />
                 </td>
                 <td>
-                  <input type="number" name="memBytes" defaultValue={device.memBytes} onChange={(event) => this.onChangeRow(event, i)} />
+                  <input type="number" name="memBytes" value={device.memBytes} onChange={(event) => this.onChangeRow(event, i)} />
                 </td>
                 <td>
-                  <input type="number" name="networkTxBytes" defaultValue={device.networkTxBytes} onChange={(event) => this.onChangeRow(event, i)} />
+                  <input type="number" name="networkTxBytes" value={device.networkTxBytes} onChange={(event) => this.onChangeRow(event, i)} />
                 </td>
                 <td>
-                  <input type="number" name="networkRxBytes" defaultValue={device.networkRxBytes} onChange={(event) => this.onChangeRow(event, i)} />
+                  <input type="number" name="networkRxBytes" value={device.networkRxBytes} onChange={(event) => this.onChangeRow(event, i)} />
                 </td>
                 <td><form onSubmit={(event) => this.onSubmitRow(event, i)}><input type="submit" value="Submit Row" className='btn' /> </form></td>
                 <td><form onSubmit={(event) => this.onSubmitDeleteRow(event, i)}><input type="submit" value="Delete Row" className='btn' /> </form></td>
