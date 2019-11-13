@@ -16,6 +16,8 @@ class MainPage extends React.Component {
         networkRxBytes: 0
       }
     }
+    this.onChangeAdd = this.onChangeAdd.bind(this);
+    this.onSubmitNewDevice = this.onSubmitNewDevice.bind(this);
   }
 
   // This function postDevice make POST request to server 
@@ -111,6 +113,19 @@ class MainPage extends React.Component {
     const devicesCopy = this.state.devices.map(device => ({ ...device }));//deep copy
     devicesCopy.push(this.state.newDevice);// add newDevice to copy of devices
     this.setState({ ...this.state, devices: devicesCopy });//update devices in state
+    const emptyDevice = {
+      ip: "",
+      owner: "",
+      cpuPct: 0,
+      memBytes: 0,
+      networkTxBytes: 0,
+      networkRxBytes: 0
+    };
+    this.setState({ newDevice: emptyDevice }, () => {// setState is asynchronous. This is callback
+      console.log("in Submit: Done setState this.state.newDevice: ", this.state.newDevice);
+      //this.forceUpdate();
+    });
+
     this.postDevice(deviceToAdd); // Sends  POST request to Server
     //console.log("deviceToAdd: ", deviceToAdd);
   }
@@ -226,12 +241,12 @@ class MainPage extends React.Component {
             </thead>
             <tbody>
               <tr>
-                <td><input type="text" name="ip" defaultValue={this.state.newDevice.ip} onChange={this.onChangeAdd} /></td>
-                <td><input type="text" name="owner" defaultValue={this.state.newDevice.owner} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="cpuPct" defaultValue={this.state.newDevice.cpuPct} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="memBytes" defaultValue={this.state.newDevice.memBytes} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="networkTxBytes" defaultValue={this.state.newDevice.networkTxBytes} onChange={this.onChangeAdd} /></td>
-                <td><input type="number" name="networkRxBytes" defaultValue={this.state.newDevice.networkRxBytes} onChange={this.onChangeAdd} /></td>
+                <td><input type="text" name="ip" value={this.state.newDevice.ip} onChange={this.onChangeAdd} /></td>
+                <td><input type="text" name="owner" value={this.state.newDevice.owner} onChange={this.onChangeAdd} /></td>
+                <td><input type="number" name="cpuPct" value={this.state.newDevice.cpuPct} onChange={this.onChangeAdd} /></td>
+                <td><input type="number" name="memBytes" value={this.state.newDevice.memBytes} onChange={this.onChangeAdd} /></td>
+                <td><input type="number" name="networkTxBytes" value={this.state.newDevice.networkTxBytes} onChange={this.onChangeAdd} /></td>
+                <td><input type="number" name="networkRxBytes" value={this.state.newDevice.networkRxBytes} onChange={this.onChangeAdd} /></td>
               </tr>
 
             </tbody>
