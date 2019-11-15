@@ -179,7 +179,7 @@ class MainPage extends React.Component {
   // GET request to server to 
   // route   '/api/devices'  to get all devices,
   // then convert them to GB, MB before saving in state
-  componentWillMount() {
+  componentDidMount() {
     //this.getDevices();   // use this line if no need to convert to GB, MB
     this.getAndConvertDevices(); // Sends GET request to Server, then convert to GB, MB
   }
