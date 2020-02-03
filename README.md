@@ -1,4 +1,4 @@
-# Nyansa-2
+## [React-App-Device-Manager](http://devicemanager.us-west-1.elasticbeanstalk.com/)
 
 
 Device Manager app is written in React for front end and Node.js and MongoDB for backend.
