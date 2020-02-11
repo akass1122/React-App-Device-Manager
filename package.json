@@ -19,7 +19,7 @@
     "express-validator": "^5.3.1",
     "mongoose": "^5.6.0",
     "request": "^2.88.0",
-    "bootstrap": "~3.2.x"
+    "bootstrap": "~3.4.x"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
